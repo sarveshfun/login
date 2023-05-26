@@ -1,6 +1,4 @@
-# project name is login oncce ther from  is submitted  from will get empty
-
-
+# project name is login onece the from  is submitted  from will get empty
 The Register User Page is a single-page application built with React. It allows users to register by providing their information such as name, email, and password. The user data is then submitted to a backend API for processing and storage.
 
 ## Features
@@ -13,7 +11,7 @@ The Register User Page is a single-page application built with React. It allows 
 
 - React
 - HTML/CSS (for styling)
-- JavaScript (ES6+)
+)
 
 ## Installation and Setup
 
@@ -22,12 +20,10 @@ The Register User Page is a single-page application built with React. It allows 
    ```shell
    git clone https://github.com/sarveshfun/login.git
 
-
    
 2.
     ```shell 
     cd login
-
 3 Install the dependencies:
 
    ```shell
@@ -37,7 +33,7 @@ The Register User Page is a single-page application built with React. It allows 
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the project directory, you can run the follwing command:
 
 ### `npm start`
 
