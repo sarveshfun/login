@@ -1,48 +1,61 @@
-import React, { useEffect }  from 'react';
+
 import { useState } from 'react';
 import  './Singup.css'
 
 
 
 
-
-
 function Signup() {
+  const [formdata, setFormdata] = useState({
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    courseType: "",
+  });
 
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
-  const [courseType, setCourseType] = useState('');
   const [privacyChecked, setPrivacyChecked] =  useState(false);
   const [errors, setErrors] =useState({})
-  const [data , setData] = useState({})
 
 
+
+
+  const handle_change=(e)=>{
+    const {name,value} = e.target
+    setFormdata({...formdata,[name]:value})
+
+ }
 
  
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log('handleSubmit',privacyChecked)
     const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
+     console.log(Object.keys(validationErrors).length)
+    if (Object.keys(validationErrors).length >0 && privacyChecked) {
+      console.log(errors)
       setErrors(validationErrors);
-      return;
+    
 
-  }else{
-    const  formData = {fullName,email,phoneNumber,password,courseType }
-      console.log(formData)
+  }else if(privacyChecked){
      fetch("http://localhost:8000/register", {
         method: 'POST',
         headers: {
            'Content-Type': 'application/json',
        },
-         body: JSON.stringify(formData),
+         body: JSON.stringify(formdata),
        })
         .then((response) => response.json())
         .then((data) => {
-                console.log(data)
+         console.log(data.status , "from featch")
      if(data.status ==="success"){
-          setData({bool:"from is summited"})
+        setFormdata({
+          fullName: "",
+          email: "",
+          phoneNumber: "",
+          password: "",
+          courseType: "",
+        })
     }  
     })
         .catch((error) => {
@@ -52,34 +65,41 @@ function Signup() {
   
       
 
+
+  }else{
+    
+    setErrors(validationErrors)
+  
   }
 }
+
+
+
  
 
 
   const handlePrivacyChange = (e) => {
+      console.log(e.target.checked)
     setPrivacyChecked(e.target.checked);
   };
   const validateForm = () => {
     const errors = {};
-
-    // Validate full name
-    if (fullName.trim() === '') {
+    if (formdata.fullName.trim() === '') {
       errors.fullName = 'Full name is required';
     
     }
-    if (!/\S+@\S+\.\S+/.test(email)) {
+    if (!/\S+@\S+\.\S+/.test(formdata.email)) {
       errors.email = 'Invalid email address';
 
     }
-    if (phoneNumber.trim() === '') {
+    if (formdata.phoneNumber.trim() === ''  && Number.isNaN(formdata.phoneNumber.trim())) {
       errors.phoneNumber = 'Phone number is required';
     }
-    if (password.trim() === '') {
+    if (formdata.password.trim() === '') {
       errors.password = 'Password is required';
     }
 
-    if (courseType === '') {
+    if (formdata.courseType === '') {
       errors.courseType = 'Course type is required';
     }
 
@@ -99,24 +119,25 @@ function Signup() {
       </div>
       <form  className='from-name' onSubmit={handleSubmit}>
         <label>{errors.fullName}</label>
-        <input type="text" value={fullName} name="fullName" placeholder='Fullname' onChange={(e) => setFullName(e.target.value)
-        }  />
+        <input type="text" value={formdata.fullName} name="fullName" placeholder='Fullname' onChange={handle_change}
+          />
         <label>{errors.email}</label>
-        <input type="email" value={email}  name="Email"  placeholder='Email' onChange={(e) => setEmail(e.target.value)} />
+        <input type="email" value={formdata.email}  name="email"  placeholder='Email' onChange={handle_change}  />
 
         <label>{errors.phoneNumber}</label>
-        <input type="text" value={phoneNumber}  name="PhoneNumber" placeholder='Phone number' onChange={(e) => setPhoneNumber(e.target.value)} />
+        <input type="text" value={formdata.phoneNumber}  name="phoneNumber" placeholder='Phone number' onChange={handle_change}  />
         <label>{errors.password}</label>
-        <input type="password" value={password} placeholder='password' name='password' onChange={(e) => setPassword(e.target.value)} />
+        <input type="password" value={formdata.password} placeholder='password' name='password' onChange={handle_change}  />
         <label>{errors.courseType}</label>
           < div className='select-contaier'>
-        <select className='select' value={courseType} name="course" onChange={(e) => setCourseType(e.target.value)}>
+        <select className='select' value={formdata.courseType} name="courseType" onChange={handle_change}>
           <option  className='type' value="">Select a course type</option>
           <option value="cs">Computer Science</option>
           <option value="maths">Mathematics</option>
           <option value="ml">Machine Learning</option>
         </select>
         </div>
+        <label>{ errors.privacyChecked}</label>
          <div  className ="checkbox-containe">
         <input
             type="checkbox"
